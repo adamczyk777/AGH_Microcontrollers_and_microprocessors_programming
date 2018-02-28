@@ -18,4 +18,4 @@ dummy:				# some data
 	
 _start:
 	MOV	$1, %eax	# exit function
-	INT	$0x80		# system interrupt
+	INT	$0x80		# system interrupt instrukcja przerawania
