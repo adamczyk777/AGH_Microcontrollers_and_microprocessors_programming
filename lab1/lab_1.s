@@ -1,12 +1,12 @@
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 # Program lab_1.s - Asemblery Laboratorium IS II rok
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 #
 #  To compile: as -o lab_1.o lab_1.s
 #  To link:    ld -o lab_1 lab_1.o
 #  To run:     ./lab_1
 #
-#----------------------------------------------------------------
+# ----------------------------------------------------------------
 
 	.equ	write_64, 1	    # write data to file function (64bit)
 	.equ	exit_64, 60	    # exit program function (64bit)
@@ -59,9 +59,9 @@ _start:
 	NOP
 
 	MOV	    $write_64,%rax          # używamy rejerstów 64 bitowych, dlatego rozpoczynaja się od litery r, 32 bitowe zaczynają się od litery
-	MOVQ	$stdout,%rdi
+	MOVQ		$stdout,%rdi
 	MOV	    $endtxt,%rsi
-	MOVQ	endlen,%rdx
+	MOVQ		$endlen,%rdx
 	SYSCALL                         # SYSCALL
 
 	NOP
