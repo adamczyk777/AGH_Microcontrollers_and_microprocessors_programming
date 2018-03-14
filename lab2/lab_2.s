@@ -28,11 +28,11 @@ andtxt:
 	.ascii	"AND  = "
 xortxt:
 	.ascii	"XOR  = "
-arg1:				#first argument
+arg1:				# first argument
 	.byte	0xA0
-arg2:				#second argument
+arg2:				# second argument
 	.byte	0x05
-result:				#result
+result:				# result
 	.byte	0
 tmp:
 	.byte	0
@@ -51,8 +51,11 @@ _start:
 
 	MOVB	arg1,%al
 	MOV	$arg1txt,%rsi
-	CALL	disp_line
-
+	CALL	disp_line	# wywołanie funkcji/procedury procesora
+				# argumentem funkcji call jest adres
+				# przechodzimy do kodu o etykiecie jak podana w argumencie
+				# odpowiednik wywołania funkjci z innych języków jakie znamy
+				
 	NOP
 
 	MOVB	arg2,%al
@@ -89,7 +92,7 @@ _start:
 	ANDB	arg2,%al
 	MOVB	%al,result
 	MOV	$andtxt,%rsi
-	CALL	displine
+	CALL	disp_line
 
 	NOP
 
@@ -109,6 +112,8 @@ _start:
 # disp_line - displays line of text (prompt + hexadecimal number)
 #----------------------------------------------------------------
 
+# type to dyrektywa używana, do deklarowania funkcji
+
 	.type disp_line,@function
 
 disp_line:
@@ -121,7 +126,7 @@ disp_line:
 
 	MOVB	tmp,%al
 	ANDB	$0x0F,%al
-	CMPB	$10,%al
+	CMPB	$10,%al		# sprawdzamy jak sie ma liczba tak o zapisana 10 do czegos w rejestrze
 	JB	digit1
 	ADDB	$('A'-0x10),%al
 	JMP	insert1
@@ -131,15 +136,15 @@ insert1:
 	MOV	%al,%ah
 
 	MOVB	tmp,%al
-	SHR	$3,%al
+	SHR	$3,%al		# SHR Shift Right przesuniecie bitowe w prawo
 	CMPB	$10,%al
-	JB	digit2
+	JB	digit2		# JB jump if below
 	ADDB	$('A'-0x10),%al
 	JMP	insert2
 digit2:
 	ADDB	$'O',%al
 insert2:
-	MOVW	%ax,$restxt
+	MOVW	%ax,restxt
 
 	MOV	$write_64,%rax
 	MOV	$stdout,%rdi
@@ -147,5 +152,5 @@ insert2:
 	MOV	reslen,%rdx
 	SYSCALL
 
-	RET
+	RET		# instrukcja kończąca ciało funkcji
 	
