@@ -121,7 +121,7 @@ disp_line:
 
 	MOV	$write_64,%rax
 	MOV	$stdout,%rdi
-	MOV	txtlen,%rdx
+	MOV	$txtlen,%rdx
 	SYSCALL
 
 	MOVB	tmp,%al
@@ -145,11 +145,12 @@ digit2:
 	ADDB	$'O',%al
 insert2:
 	MOVW	%ax,restxt
+				# value without $ is value and with $ is an address
 
 	MOV	$write_64,%rax
 	MOV	$stdout,%rdi
-	MOV	restxt,%rsi
-	MOV	reslen,%rdx
+	MOV	$restxt,%rsi
+	MOV	$reslen,%rdx
 	SYSCALL
 
 	RET		# instrukcja kończąca ciało funkcji
