@@ -13,14 +13,14 @@
 	.equ	write_64,	0x01	# write data to file function
 	.equ	exit_64,	0x3c	# exit program function
 
-	.equ	mode,	0x180	# attributes for file creating
-
+	.equ	mode,	0x1ff	# attributes for file creating
+	.equ	stderr, 2
 	.equ	errval,	2
 
 	.data
 	
-file_n:				# file name (0 terminated)
-	.string	"testfile.txt"
+file_n:				# file name (0 terminated) string od ascii rozni sie dodanym na koncu
+	.string	"testfile.txt"  # bajtem 0
 
 file_h:				# file handle
 	.quad		0
@@ -60,7 +60,7 @@ _start:
 	MOV	$write_64,%rax	# write function
 	MOV	file_h,%rdi	# file handle in RDI
 	MOV	$txtline,%rsi	# RSI points to data buffer
-	MOV	$txtlen,%rdx	# bytes to be written
+	MOV	txtlen,%rdx	# bytes to be written
 	SYSCALL
 
 	CMP	%rdx,%rax
@@ -77,7 +77,7 @@ all_ok:
 	MOV	$write_64,%rax	# write function
 	MOV	$stderr,%rdi	# file handle in RDI
 	MOV	$allokmsg,%rsi	# RSI points to All OK message
-	MOV	$alloklen,%rdx	# bytes to be written
+	MOV	alloklen,%rdx	# bytes to be written
 	SYSCALL
 
 	XOR	%rdi,%rdi
@@ -87,7 +87,7 @@ error:
 	MOV	$write_64,%rax	# write function
 	MOV	$stderr,%rdi	# file handle in RDI
 	MOV	$errmsg,%rsi	# RSI points to file error message
-	MOV	$errlen,%rdx	# bytes to be written
+	MOV	errlen,%rdx	# bytes to be written
 	SYSCALL
 
 	MOV	$errval,%rdi
