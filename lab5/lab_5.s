@@ -107,6 +107,14 @@ next:
 # REPE / REPZ
 # REPNE / REPNZ 
 
+	CMPB	$'0', %al
+	JB skip
+	CMPB	$'9', %al
+	JA letter
+	MOV $'#', %al
+	JMP skip
+
+letter:
 	CMPB	$'A', %al
 	JB skip
 	CMPB	$'z', %al
