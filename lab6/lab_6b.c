@@ -7,6 +7,7 @@
 //---------------------------------------------------------------
 
 #include <stdio.h>
+#include <time.h>
 
 long long fibc( unsigned int k )
 {
@@ -20,10 +21,29 @@ long long fibc( unsigned int k )
 
 long long fiba( unsigned int k );
 
-void main( void )
-{
- int i;
+void main( void ) {
+	int i;
+	clock_t beginC, endC, beginA, endA;
+	long timeC, timeA;
 
- for( i = 0; i <= 10; i++ )
-   printf( "FibC( %2d ) = %ld FibA = %ld\n", i, fibc( i ), fiba( i ) );
+	puts("C lang");
+	
+	beginC = clock();
+	for( i = 0; i <= 42; i++ )
+		printf( "FibC( %2d ) = %ld\n", i, fibc( i ) );
+	endC = clock();
+	timeC = endC - beginC;
+	printf("C time = %ld \n", timeC);
+
+	puts("assembly");
+	beginA = clock();
+	for( i = 0; i <= 42; i++ )
+		printf( "FibA( %2d ) = %ld\n", i, fibc( i ), fiba( i ) );
+	endA = clock();
+	timeA = endA - beginA;
+	printf("Assembly time = %ld \n", timeA);
+
+	printf("Assembly time: %ld\n", timeA);
+	printf("C time: %ld\n", timeC); 
+	printf("%s was faster\n", timeC <= timeA ? "C" : "Assembly" );
 }

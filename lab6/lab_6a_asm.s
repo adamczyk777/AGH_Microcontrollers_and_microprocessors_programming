@@ -13,12 +13,12 @@ facta:	mov $1, %rax
 
 	push %rdi
 
-	dec %rdi
-	call facta
+	dec %rdi	# zmniejszamy argument o 1
+	call facta	# wywołujemy rekurencyjnie factorial ASM
 
-	pop %rdi
+	pop %rdi	
 
-	mul %rdi
+	mul %rdi	# jednoargumentowe mnożenie rejestr rdi jest mnożnikiem, mnożna jest w %rax
 
 f_e:	ret
 

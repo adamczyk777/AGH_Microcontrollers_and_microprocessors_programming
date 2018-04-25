@@ -17,6 +17,7 @@ value:
 	.global main
 	
 main:
+	push %rax
 	mov value, %rsi
 	mov $fmt, %rdi
 	mov $0, %rax
