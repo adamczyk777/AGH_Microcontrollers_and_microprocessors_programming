@@ -1,9 +1,6 @@
-# Exclude all 
-./**/*
-# unexclude all with etensions
-!./**/*.*
-
 # unexclude Makefile
 !./**/Makefile
 
 !.gitignore
+
+./**/bin
