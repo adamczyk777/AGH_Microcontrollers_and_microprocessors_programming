@@ -1,8 +1,8 @@
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Funkcja do programu lab_9c
 #
 # Compute Pi (Leibniz formula) using SSE instructions
-#----------------------------------------------------------
+# ----------------------------------------------------------
 
 	.data
 	.align 16
@@ -15,7 +15,7 @@ add4:
 	.double	4.0, 4.0	# difference between denominators
 zero:	
 	.double	0.0, 0.0	# sums starting values
-#----------------------------------------------------------
+# ----------------------------------------------------------
 
 denom_f:	
 	.float	1.0, 3.0, 5.0, 7.0	# first, second, third and fourth denominators
@@ -25,7 +25,7 @@ add8_f:
 	.float	8.0, 8.0, 8.0, 8.0	# difference between denominators
 zero_f:	
 	.float	0.0, 0.0, 0.0, 0.0	# sums starting values
-#----------------------------------------------------------
+# ----------------------------------------------------------
 
 	.text
 	.type fun_a, @function
@@ -57,7 +57,7 @@ next:
 
 	.type fun_b, @function
 	.global fun_b
-#----------------------------------------------------------
+# ----------------------------------------------------------
 
 fun_b:
 	shr $2, %rdi		# four terms are computed in parallel
