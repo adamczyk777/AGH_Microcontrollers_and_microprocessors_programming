@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-char *binary_op(char *result, char* arg1, char *arg2, int operation );
+int binary_op(char *result, char* arg1, char *arg2, int operation );
 
 //---------------------------------------------------------------
 // funkcja realizuje operację binarną na argumentach w postaci ciągów
@@ -33,7 +33,7 @@ int main(){
     printf("Argument 1: %s\n", arg1 );
     printf("Argument 2: %s\n", arg2 );
     printf("Operation : %d\n", oper );
-    printf("Result    : %s\n", binary_op( res, arg1, arg2, oper ) );
+    printf("Result    : %d\n", binary_op( res, arg1, arg2, oper ) );
     printf("string    : %s\n", res);
     return 0;
 }
