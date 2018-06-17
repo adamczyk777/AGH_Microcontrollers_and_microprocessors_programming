@@ -1,0 +1,297 @@
+ ELO GOŚCIE POWODZONKA 
+<------	ZASADY:	----->
+#1. Wklejamy tylko działający kod
+#2. Jeśli ktoś pisze/edytuje kod, nie przeszkadzamy mu
+#3. Jeśli edytujemy czyjś kod, możemy albo komentować albo przekopiować całą funkcję na nowo i zamienić odpowiednie elementy
+#4. Jeśli ktoś skończy pierwszy, wkleja cały działający program, zostawiając odpowiedni komentarz
+#5. Jeśli kopiujemy kod od kogoś, mamy OBOWIĄZEK go zrefaktoryzować!
+#6. Działające funkcje (ewentualnie jeśli tworzymy ja tutaj to przed funkcją), należy opisać krótkim komentarzem (lub dać jednoznaczną nazwę)
+#7. Jeśli ktoś już wkleił w pełni działający kod, a też mamy działający lub mamy pytania, możemy stosownie oddzielić kod jakimś ciągiem zakomentowanych znaków i wkleić pod spodem swój kod lub pytania.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	C:	----->
+
+
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER:	----->
+
+
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	KOMENTARZE:	----->
+
+//---------------------------------------------------------------
+// Test program - grupa 3
+//---------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+char *encode(char *str, int charset, int case );
+
+//---------------------------------------------------------------
+// funkcja szyfruje tekst zamieniając znaki w łańcuchu będącym parametrem
+//
+// Parametry:
+//    str     - łańcuch wejściowy/wynikowy
+//    charset - zbiór znaków do zamiany
+//               0 = tylko litery ('A'->'Z',...,'Z'->'A','a'->'z',...'z'->'a')
+//               1 = tylko cyfry ('0'->'9',...','9'->'0')
+//               2 = litery i cyfry
+//    case    - flaga decydująca o zamianie wielkości liter
+//               0 = brak zamiany (pozostaje oryginalna wielkość litery)
+//               1 = małe litery są zamieniane na wielkie
+//               2 = wielkie litery są zamieniane na małe
+//
+// Wersja minimum : szyfrowanie liter (charset=0) bez zmiany wielkości
+// liter (case=0)
+//---------------------------------------------------------------
+ 
+int main(){
+    char str[] = "To jest tekst do zaszyfrowania. A to cyferki 0123456789";
+    int charset = 0;
+    int case = 0;
+
+    printf("Original string: %s\n", str );
+    printf("Charset: %d\n", charset );
+    printf("Case   : %d\n", case );
+    printf("Encoded string : %s\n", encode( str, charset, case ) );
+    return 0;
+
+
+<------------------------------------------------------------------>
+Dziala wam? || jeszcze robie || ktos to robi? D: || wersja min juz dziala(chyba)
+<------------------------------------------------------------------>
+pelna dzialajaca wersia jasiel nie dziala komentowac na gorze
+
+
+    .text
+    .type encode, @function
+    .global encode   
+
+encode:
+    push %rdi
+    movb (%rdi),%r8b
+    cmpb $0,%r8b
+    je result
+
+loop:
+    cmp $0,%rsi             #charset = 0
+    jne jeden
+    cmp $0,%rdx
+    je result
+    cmp $1,%rdx
+    je male
+    movb (%rdi),%r8b       
+    cmpb $65,%r8b
+    jb nextloop2      
+    cmpb $90,%r8b 
+    jg  nextloop2
+     movb $155,%r9b
+    subb %r8b,%r9b
+    addb $32,%r9b
+    movb %r9b,(%rdi)
+    
+    jmp nextloop
+
+male:
+    cmpb $97,%r8b
+    jb nextloop2      
+    cmpb $122,%r8b 
+    jg  nextloop2
+
+    movb $219,%r9b
+    subb %r8b,%r9b
+    subb $32,%r9b
+
+    movb %r9b,(%rdi)
+    
+    jmp nextloop
+
+nextloop2:
+    movb %r8b,(%rdi)
+    jmp nextloop 
+
+jeden:
+    cmp $1,%rsi             #charset = 1
+    jne dwa                 
+    movb (%rdi),%r8b       
+    cmpb $48,%r8b
+    jb nextloop2      
+    cmpb $57,%r8b 
+    jg  nextloop2
+    movb $105,%r9b
+    subb %r8b,%r9b
+    movb %r9b,(%rdi)
+    jmp nextloop
+
+dwa:                        #charset = 2
+    movb (%rdi),%r8b       
+    cmpb $48,%r8b
+    jb nextloop2      
+    cmpb $57,%r8b 
+    jg  dwa_litery
+    movb $105,%r9b
+    subb %r8b,%r9b
+    movb %r9b,(%rdi) 
+    jmp nextloop
+
+dwa_litery: 
+    cmp $0,%rdx
+    je nextloop2
+    cmp $1,%rdx
+    je male
+    movb (%rdi),%r8b       
+    cmpb $65,%r8b
+    jb nextloop2      
+    cmpb $90,%r8b 
+    jg  nextloop2
+     movb $155,%r9b
+    subb %r8b,%r9b
+    addb ,%r9b
+    movb %r9b,(%rdi)
+    
+                       
+    
+    
+
+
+
+nextloop:
+    inc %rdi
+    movb (%rdi),%r8b       
+    cmpb $0,%r8b
+    jne loop
+    
+
+result:
+    pop %rax
+    ret
+    
+    
+    
+    
+    
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  #Powinno dzialac
+  
+  	.text
+	.type	encode,@function
+	.global encode
+encode:
+	# rdi - *str
+	# rsi - charset
+	# rdx - case
+
+	PUSH	%rdi	#wrzucamy argument na stos
+
+	XOR	%rcx,%rcx	#zerujemy rejestr dla argumentu z rsi
+	MOV	%rsi,%rcx	 #przygotowanie do LODSB i STOSB, teraz charset jest w rcx
+	MOV	%rdi,%rsi	# LODSB pobiera z rsi dane i STOSB zapisuje do rdi
+
+	XOR	%r8,%r8		#operacje zamiany znakow, pomocniczy rejestr
+
+loop:				#glowna petla programu
+	LODSB
+
+	CMP	$0,%al		#operujemy na 8bitowym rejstrze rax
+	JZ	finishLoop
+
+
+	#sprawdzamy charset
+	CMP	$0,%rcx
+	JZ	onlyLetter
+	CMP	$1,%rcx
+	JZ	onlyDigits
+	CMP	$2,%rcx
+	JZ	onlyLetter
+
+	JMP	loopNext
+
+
+onlyLetter:
+	#sprawdzamy czy znak jest litera
+	CMP	$'A',%al
+	JL	checkCharset	
+	CMP	$'Z',%al
+	JLE	UpperCode
+	CMP	$'z',%al
+	JG	checkCharset
+	CMP	$'a',%al
+	JGE	LowerCode
+
+checkCharset:
+	CMP	$2,%rcx		#gdy mamy tryb charset==2
+	JZ	onlyDigits
+	
+	JMP	loopNext
+
+UpperCode:
+	#kodujemy znaki AZ -> ZA
+
+	MOVB	$'Z',%r8b
+	SUB	$'A',%al
+	SUB	%al,%r8b
+	MOVB	%r8b,%al
+
+	#sprawdzamy jeszcze case
+	CMP	$2,%rdx
+	JNZ	UpperFinish
+	ADDB	$32,%al
+
+UpperFinish:	
+	CMP	$2,%rcx		#gdy mamy tryb charset==2
+	JZ	onlyDigits
+	
+	JMP	loopNext
+
+LowerCode:
+	#kodujemy znaki az -> za
+	
+	MOVB	$'z',%r8b
+	SUBB	$'a',%al
+	SUBB	%al,%r8b
+	MOVB	%r8b,%al
+
+	#sprawdzamy jeszcze case
+	CMP	$1,%rdx
+	JNZ	LowerFinish
+	SUBB	$32,%al
+
+LowerFinish:	
+	CMP	$2,%rcx		#gdy mamy tryb charset==2
+	JZ	onlyDigits
+
+	JMP	loopNext
+
+onlyDigits:
+
+	CMP	$'0',%al
+	JL	loopNext
+	CMP	$'9',%al
+	JG	loopNext
+
+	#zamiana cyfr
+	MOVB	$'9',%r8b
+	SUBB	$'0',%al
+	SUBB	%al,%r8b
+	MOVB	%r8b,%al
+
+	JMP	loopNext
+	
+loopNext:	
+	STOSB
+	JMP	loop
+
+
+finishLoop:
+	STOSB
+	POP	%rax	#zwracamy ten argument
+	RET
+	
+  

@@ -1,0 +1,238 @@
+eś szczególne opcje do kompilacji?1#	<------	ZASADY:	----->
+#1. Wklejamy tylko działający kod
+#2. Jeśli ktoś pisze/edytuje kod, nie przeszkadzamy mu
+#3. Jeśli edytujemy czyjś kod, możemy albo komentować albo przekopiować całą funkcję na nowo i zamienić odpowiednie elementy
+#4. Jeśli ktoś skończy pierwszy, wkleja cały działający program, zostawiając odpowiedni komentarz
+#5. Jeśli kopiujemy kod od kogoś, mamy OBOWIĄZEK go zrefaktoryzować!
+#6. Działające funkcje (ewentualnie jeśli tworzymy ja tutaj to przed funkcją), należy opisać krótkim komentarzem (lub dać jednoznaczną nazwę)
+#7. Jeśli ktoś już wkleił w pełni działający kod, a też mamy działający lub mamy pytania, możemy stosownie oddzielić kod jakimś ciągiem zakomentowanych znaków i wkleić pod spodem swój kod lub pytania.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	C:	----->
+
+	#include <stdio.h>
+	#include <stdlib.h>
+
+	// Assembly function
+	void func_name();
+
+	void main( void ){
+ 			//body
+	}
+
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER:	----->
+
+#kod działa nie wie tylko co zrobic jesli roznej dlugosci sa te arg
+# Jesteś pewien/pewna, że działa? Bo tam zwraca 102011, a nie powinno być 1 na wyższej pozycji, zamiast tego 2?
+#zmień numer na 1 z 0 0-add 1-and 2-or 3-xor ja wiem czym sie rozni and od dodawania xD tylko chodzi mi o to, że jak dodajesz dwie liczby binarne, to chyba w wyniku nie moze byc 2? :P
+#potrzebne jakieś szczególne opcje do kompilacji?
+#dostaję segmentation fault (core dumped)
+#skopiowane dzialalo bez zarzutu przy normalnej kompilacji
+#ogarnął ktoś o co chodzi z tym addem? tej dwójki tam nie może być :/ z asemblera noga jestem, ale generalnie zrobilbym tak, ze jesli jest jakis tam znak ascii powyzej 49 no to trzeba przesunac to o pozycje w lewo 
+#DZIĘKI WSZYSTKIM
+    
+    .text
+    .type binary_op,@function
+    .global binary_op
+
+
+binary_op:
+    push %rdi
+    
+    
+
+loop:
+    mov (%rsi),%r8
+    mov (%rdx),%r9
+    sub $48,%r8
+    sub $48,%r9
+    cmp $0,%rcx
+    jne jeden
+    add %r8,%r9
+    add $48,%r9
+    mov %r9,(%rdi)
+    jmp nextloop
+
+
+jeden:
+    cmp $1,%rcx
+    jne dwa
+    and %r8,%r9
+    add $48,%r9
+    mov %r9,(%rdi)
+    jmp nextloop
+
+dwa:
+    cmp $2,%rcx
+    jne trzy
+    or %r8,%r9
+    add $48,%r9
+    mov %r9,(%rdi)
+    jmp nextloop
+
+trzy:
+    xor %r8,%r9
+    add $48,%r9
+    mov %r9,(%rdi)
+
+
+nextloop:
+    inc %rsi
+    inc %rdx
+    inc %rdi
+    cmp $0,(%rsi)
+    jne loop
+
+
+result:
+    pop %rax    
+    ret
+#koniec kodu
+
+
+
+	.data
+msg:
+	.ascii	"Tekscik\n"
+new_line_sign:
+	.ascii	"\n"
+
+	.equ 	stdout,		0x01
+	.equ 	write,		0x01
+	.equ	exit, 		60
+	.equ 	msg_len, 	(new_line_sign - msg)
+
+	.text
+	.global _start
+
+_start:
+
+_exit:
+	MOV	$exit,		%rax
+	XOR	%rdi,		%rdi
+	SYSCALL
+
+#--------------------------------
+#	Function:	func_name
+#	Parameters:	?
+
+	.type func_name,@function
+func_name:
+	RET	
+    
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	KOMENTARZE:	----->
+    Polecenie jest na stronie buby
+    nk wstawi całe polecenie tutaj
+#include <stdlib.h>
+#include <stdio.h>
+<------------ Cała treść zadania z strony Buby -------------------->
+char *binary_op(char *result, char* arg1, char *arg2, int operation );
+
+//---------------------------------------------------------------
+// funkcja realizuje operację binarną na argumentach w postaci ciągów
+// znaków '0' i '1' i zwraca wynik w postaci takiego samego łańcucha
+//
+// parametry:
+//    result     - bufor na łańcuch wynikowy
+//    arg1, arg2 - argumenty operacji
+//    operation  - rodzaj operacji (0=ADD, 1=AND, 2=OR, 3=XOR)
+//
+// W przypadku gdy długości arg1 i arg2 są różne, operację należy
+// wykonać tak, jakby krótszy łańcuch zawierał z lewej strony
+// odpowiednią liczbę zer.
+//
+// Wersja minimum : ADD dla argumentów o identycznych długościach
+//---------------------------------------------------------------
+ 
+int main(){
+    char arg1[] = "001001";
+    char arg2[] = "101010";
+    char res[ 65 ];
+    int oper = 0;
+
+    printf("Argument 1: %s\n", arg1 );
+    printf("Argument 2: %s\n", arg2 );
+    printf("Operation : %d\n", oper );
+    printf("Result    : %s\n", binary_op( res, arg1, arg2, oper ) );
+    return 0;
+}
+<------------------------------------------------------------------>
+  
+  
+  
+	.text
+	.type binary_op,@function
+	.globl binary_op
+
+# rdi - result, rsi - 1, rdx - 2, ecx - n
+binary_op:
+	mov	%rdi, %rax	# rdi bede przesuwac, wiec od razu zapamietuje wskaznik w rax
+	push	%r8		# przechowanie dotychczasowej wartosci na wszelki wypadek
+	push	%r9
+	xor	%r8, %r8	# arg1
+	xor	%r9, %r9	# arg2
+write_tmp1:			# konwersja stringa z arg1 na liczbe w r8
+	cmpb	$0, (%rsi)	# czy jest koniec stringa?
+	je	write_tmp2
+	shl	$1, %r8		# przesuwamy dotychczasowa wartosc w lewo bo czytamy coraz mlodsze bity
+	cmpb	$'0', (%rsi)  # (%rsi, %r8, 1); 
+	je	write1_continue	# zostawiamy bit 0, czytamy kolejny znak
+	inc	%r8		# znak to '1', czyli najmlodszy przeczytany bit to 1
+write1_continue:
+	inc	%rsi
+	jmp	write_tmp1
+write_tmp2:			# to samo dla arg2 -> r9
+	cmpb	$0, (%rdx)
+	je	count
+	shl	$1, %r9
+	cmpb	$'0', (%rdx)
+	je	write2_continue
+	inc	%r9
+write2_continue:
+	inc	%rdx
+	jmp	write_tmp2
+count:				# sprawdzamy jaka ma byc operacja i liczymy
+	cmpl	$0, %ecx
+	je	op_add
+	cmpl	$1, %ecx
+	je	op_and
+	cmpl	$2, %ecx
+	je	op_or
+	xor	%r9, %r8	# zakladam, ze jedyna pozostala mozliwa wartosc to 3
+	jmp	write_str
+op_add:
+	add	%r9, %r8
+	jmp	write_str
+op_and:
+	and	%r9, %r8
+	jmp	write_str
+op_or:
+	or	%r9, %r8
+	jmp	write_str
+write_str:			# przepisanie wartosci z r8 do stringa
+	mov	$1, %rcx
+	shl	$63, %rcx	# ustawiam maske na 1000...0
+write_ch:			# sprawdzam wartosci kolejnych bitow w liczbie od najstarszego
+	test	%rcx, %r8
+	jz	write_0		# jesli bit ustawiony to dopisuje '1', jak nie to '0'
+	movb	$'1', (%rdi)
+	jmp	next_char
+write_0:
+	movb	$'0', (%rdi)
+next_char:
+	inc	%rdi
+	shr	$1, %rcx	# po sprawdzeniu wszystkich bitow rcx = 0
+	jnz	write_ch
+	jmp	finish
+finish:
+	movb	$0, (%rdi)	# znak konca napisu
+	pop	%r9
+	pop	%r8
+	ret

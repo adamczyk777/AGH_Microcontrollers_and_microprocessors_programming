@@ -1,0 +1,489 @@
+
+# case'y są zrobione
+# czekam na shifta
+# jak bedzie smigac to tu wlecirebelians are bult on hope#	<------	ZASADY:	----->
+#1. Wklejamy tylko działający kod
+#2. Jeśli ktoś pisze/edytuje kod, nie przeszkadzamy mu
+#3. Jeśli edytujemy czyjś kod, możemy albo komentować albo przekopiować całą funkcję na nowo i zamienić odpowiednie elementy
+#4. Jeśli ktoś skończy pierwszy, wkleja cały działający program, zostawiając odpowiedni komentarz
+#5. Jeśli kopiujemy kod od kogoś, mamy OBOWIĄZEK go zrefaktoryzować!
+#6. Działające funkcje (ewentualnie jeśli tworzymy ja tutaj to przed funkcją), należy opisać krótkim komentarzem (lub dać jednoznaczną nazwę)
+#7. Jeśli ktoś już wkleił w pełni działający kod, a też mamy działający lub mamy pytania, możemy stosownie oddzielić kod jakimś ciągiem zakomentowanych znaków i wkleić pod spodem swój kod lub pytania.
+http://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	C TREŚĆ!!!!:	----->
+
+
+
+#include <stdlib.h>
+#include <stdio.h>
+
+char *rotate_str(char *str, int shift, int case );
+
+//---------------------------------------------------------------
+// funkcja realizuje obrót (przesunięcie cykliczne) ciągu znaków
+// z możliwością zmiany wielkości liter
+//
+// Parametry:
+//    str   - łańcuch znaków (wejściowy/wynikowy)
+//    shift - przesunięcie
+//              shift>0 przesunięcie o shift znaków w prawo
+//              shift<0 przesunięcie o |shift| znaków w lewo
+//            UWAGA: shift może być większe od długości napisu!
+//    case  - zmiana wielkości liter
+//              0 = brak ingerencji w wielkość liter
+//              1 = zmiana małych liter na wielkie
+//              2 = zmiana wielkich liter na małe
+//              3 = zmiana wielkości liter na przeciwne
+//
+// Wersja minimum : shift>0 dla case=0
+//---------------------------------------------------------------
+ 
+int main(){
+    char str[] = "To jest napis testowy";
+    int shift = 8;
+    int case = 0;
+
+    printf("Original string: %s\n", str );
+    printf("Shift = %d\n", shift );
+    printf("Case  = %d\n", case );
+    printf("Rotated string : %s\n", rotate_str( str, shift, case ) );
+    return 0;
+}
+
+
+
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER 1:	----->
+
+# WAZNE ZEBY DLUGOSC STRINGA BYŁA W REJESTRZE R11. Funkcja rotate_string BĘDZIE W  DOKLEJONA WYZEJ JAK BEDZIE SKONCZONA.
+# PRACUJEMY NAD TYM. jak ktoś ma własnego shifta to moze wklejac i próbować
+
+	.data
+    .text
+	.global rotate_str
+	.type rotate_str, @function
+    
+    
+set_0:
+		MOV $-1, %r10              	  #iterator
+        XOR %r9,%r9					  #wyczyszczenie rejestru z elementami
+
+char_change:
+		INC %r10   					  #inkrementacja
+        CMP	%r11, %r10                # w r11 będzie długośc stringa, ale zmienia znaki tak jak powinno
+        JG end						  #warunek stopu
+        MOV (%rdi,%r10,1), %r9b		  #pobranie elementu
+		CMP $0, %rdx  				  #sprawdzanie case, jesli jest 0 to wylazimy z programu, jelsi nie to oblsuga przypadków
+        JE end
+        CMP $1, %rdx
+      	JE small_to_big
+        CMP $2, %rdx
+        JE big_to_small
+        CMP $3, %rdx
+      	JE all
+        
+        
+small_to_big:
+		CMP $97, %r9b				#sprawdzenie ascii, odpowiednie skoki i odjecie wartosci
+        JB char_change
+        CMP $122, %r9b
+        JA char_change
+        SUB $32, %r9b
+        MOV %r9b, (%rdi,%r10,1)
+        JMP char_change				#powrót do pętli głownej
+        
+big_to_small:
+		CMP $65, %r9b				#sprawdzenie ascii, odpowiednie skoki i odjecie wartosci
+        JB char_change
+        CMP $90, %r9b
+        JA char_change
+        ADD $32, %r9b
+        MOV %r9b, (%rdi,%r10,1)
+        JMP char_change				#powrót do pętli glownej
+        
+all:
+		CMP $65, %r9b				#wartosci sprawdzamy i odpowiednie skoki do podmian
+        JB char_change
+        CMP $90, %r9b
+        JA small_to_big
+        JMP big_to_small
+      
+end:
+		MOV %rdi, %rax			#przeniesienie wyniku do rejestru zwrotnego
+		ret
+    
+    
+    
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER 2:	----->
+    .data
+    .text
+	.global rotate_str
+	.type rotate_str, @function
+    
+    
+    
+    
+    
+    
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER 3:	----->
+    .data
+    .text
+	.global rotate_str
+	.type rotate_str, @function
+    
+    
+    
+    #   Author:     Krzysztof Janecki
+#   Date:       15.01.2018, godzina 11:00
+#   Function:   rotate_str
+#   Param:
+#       %rdi - 
+#       %rsi -
+#       %rdx -
+#       %rcx -
+#
+
+    .data
+    .text
+    .global rotate_str
+    .type rotate_str, @function
+rotate_str:
+    XOR %r8, %r8
+    XOR %r9, %r9
+    XOR %r10, %r10
+    XOR %r11, %r11
+    XOR %r12, %r12
+    XOR %r13, %r13
+    MOV $48, %r12b
+    
+    XOR %rax, %rax
+    
+    MOV %rdi, %r8
+    MOV %rdx, %r10
+
+    CMP $0, %sil
+    JL call_shift_left
+    CALL shift_right
+    JMP end
+call_shift_left:
+    CALL shift_left
+    
+end:
+    MOV %rdi, %rax
+    RET
+
+    .type shift_right, @function
+shift_right:
+
+outer_loop_r:
+
+inner_loop_r:
+    
+    MOV (%r8), %r11b
+    CALL operation
+    MOV %r12b, (%r8)
+    MOV %r11b,%r12b
+    INC %r8
+    MOV (%r8), %r11b
+    CMP $0, %r11b
+    JNE inner_loop_r
+
+    MOV %rdi, %r8
+    MOV %r12b, (%r8)
+
+    DEC %rsi
+    CMP $0, %rsi
+    JNE outer_loop_r
+
+    RET
+
+    .type shift_left, @function
+shift_left:
+
+find_string_end:
+    MOV (%r8), %r11b
+    CMP $0, %r11b
+    JE set_end_pointer
+    ADD $1, %r13
+    INC %r8
+    JMP find_string_end
+    
+
+set_end_pointer:
+    DEC %r13
+    DEC %r8
+    MOV %r8, %r9
+
+
+
+outer_loop_l:
+    MOV %r9, %r8
+
+inner_loop_l:
+    
+    MOV (%r8), %r11b
+    MOV %r12b, (%r8)
+    MOV %r11b,%r12b
+    DEC %r8    
+    DEC %r13
+    CMP $0, %r13
+    JB inner_loop_l
+
+    MOV %r9, %r8
+    MOV %r12b, (%r8)
+
+    DEC %rsi
+    CMP $0, %rsi
+    JNE outer_loop_l
+
+    RET
+
+#   %r11b - znak do zamiany
+
+    .type operation, @function
+operation:
+
+    CMP $1, %dl
+    JE operation1
+    CMP $2, %dl
+    JE operation2
+    CMP $3, %dl
+    JE operation3
+
+    JMP operation_end
+
+operation1:
+
+    CMP $'a', %r11b
+    JB operation_end
+    CMP $'z', %r11b
+    JA operation_end
+
+    SUB $0x20, %r11b
+
+    JMP operation_end
+
+operation2:
+
+    CMP $'A', %r11b
+    JB operation_end
+    CMP $'Z', %r11b
+    JA operation_end
+
+    OR $0x20, %r11b
+
+    JMP operation_end
+
+operation3:
+
+    CMP $65, %r11b
+    JB operation_end
+    CMP $122, %r11b
+    JA operation_end
+
+    CMP $'Z', %r11b
+    JBE operation2
+    CMP $'a', %r11b
+    JAE operation1
+
+    JMP operation_end
+
+operation_end:
+    RET     
+
+    
+    
+    
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER 4:	----->
+    .data
+    .text
+	.global rotate_str
+	.type rotate_str, @function
+    
+    
+    
+    
+    
+    
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	ASSEMBLER 5:	----->
+     
+  #działa? wrzuc to do odpowiedniej wersji wyzej . po to to zrobilem - > Jakiś dziwny znak pojawia się w wyniku na końcu -> wgl mi nie dzial
+  #pojawia sie tylko randomowy znak na koncu :< -> no. i nic a nic sie nie zmienia.
+	# ja mam naruszenie o. p. KTO TO ZAZNACZYŁ WSZYSTKO!? >> nie ja ZZ NIECH ODZNACZY
+    
+    
+.data
+
+.text
+.type rotate_str ,@function
+.global rotate_str
+
+
+rotate_str:
+    push    %rdi
+    xor     %r15, %r15 # wskaźnik na poczatek
+    xor     %r11, %r11
+    xor     %r12, %r12
+    xor     %r13, %r13
+    mov     $0, %r13
+
+ostatni:
+    cmp     $0, (%rdi)
+    je      petla1
+    inc     %r11
+    inc     %rdi
+    jmp     ostatni
+
+prep:
+    pop     %rdi
+    push    %rdi
+    dec     %r11
+    dec     %r11
+
+
+petla1:
+    cmp     $0, %rsi
+    je      end
+
+    movb     (%rdi, %r11, 1), %r14b
+    push      %r11
+
+    petla2: # przesuniecie
+        cmp     $0, %r11
+        je      petla1_cd
+        dec     %r11
+        jmp     petla2
+
+petla1_cd:
+    pop     %r11
+    mov     $0, %r13
+
+    movb    %r14b, (%rdi, %r13 , 1)
+
+
+next_loop:
+    dec     %rsi
+    jmp     petla1
+
+
+
+end:
+    pop     %rax
+    ret
+
+
+
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	KOMENTARZE:	----->
+#	Jak ktoś skończy niech wrzuci swoją wersję jako kolejną wersję assemblera. Zrobiłem kilka sekcji
+   #NIE ZAZNACZAJCIE TEGO TAK! ALBO ODZNACZCIE CHOCIAZ! <- madrze gada + + +
+    # ma ktoś coś co działa?! ;\ cokolwiek :O? :()
+    # no i jak tam?
+    # Wiater Mateusz - dziala!
+    #Wiater ja mam naruszenie ochropy pamici o co biega
+    #HELP
+    #warning: cannot find entry symbol _start; defaulting to 0000000000400078
+	#o co z tym biega?
+	# gcc -o prog5.x prog5.s prog5.c      <3
+    
+    #to jest podstawowa
+    # Wiater Mateusz
+
+# char *rotate_str(char *str, int shift, int casex );
+#                   %rdi        %rsi      %rdx
+.text
+.type rotate_str ,@function
+.global rotate_str
+
+
+rotate_str:
+    push    %rdi
+    xor     %r15, %r15 # wskaźnik na poczatek
+    xor     %r11, %r11
+    xor     %r12, %r12
+    xor     %r13, %r13
+    mov     $0, %r13
+
+count_length:
+    mov (%rdi, %rbx, 1), %r9d
+    cmp $0, %r9
+    je ret_length
+    inc %rbx
+    jmp count_length
+
+ret_length:
+    dec %rbx
+    mov %rbx, %r11
+    xor %r9, %r9
+    xor %rbx, %rbx
+    jmp char_change
+
+
+char_change:
+    inc     %r11
+    pop     %rdi
+    push    %rdi
+    dec     %r11
+
+petla1:
+    cmp     $0, %rsi
+    je      end
+
+    movb     (%rdi, %r11, 1), %r14b
+    push      %r11
+    petla2: # przesuniecie
+        cmp     $0, %r11
+        je      petla1_cd
+
+        mov     %r11, %rax
+        sub     $1, %rax
+        mov     (%rdi, %rax, 1), %r8b
+        mov     %r8b,(%rdi, %r11,1)
+
+        dec     %r11
+        jmp     petla2
+
+petla1_cd:
+    pop     %r11
+
+    movb    %r14b, (%rdi, %r13 , 1)
+
+
+next_loop:
+    dec     %rsi
+    jmp     petla1
+
+
+
+end:
+    pop     %rax
+    ret
+
+    
+    
+
+    
+    
+    
+    

@@ -1,0 +1,286 @@
+f#1. Wklejamy tylko działający kod
+#2. Jeśli ktoś pisze/edytuje kod, nie przeszkadzamy mu
+#3. Jeśli edytujemy czyjś kod, możemy albo komentować albo przekopiować całą funkcję na nowo i zamienić odpowiednie elementy
+#4. Jeśli ktoś skończy pierwszy, wkleja cały działający program, zostawiając odpowiedni komentarz
+#5. Jeśli kopiujemy kod od kogoś, mamy OBOWIĄZEK go zrefaktoryzować!
+#6. Działające funkcje (ewentualnie jeśli tworzymy ja tutaj to przed funkcją), należy opisać krótkim komentarzem (lub dać jednoznaczną nazwę)
+#7. Jeśli ktoś już wkleił w pełni działający kod, a też mamy działający lub mamy pytania, możemy stosownie oddzielić kod jakimś ciągiem zakomentowanych znaków i wkleić pod spodem swój kod lub pytania.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	C:	----->
+
+	include <stdio.h>
+	include <stdlib.h>
+
+	// Assembly function
+	void func_name();
+
+	void main( void ){
+ 			//body
+	}
+ #ktoś coś
+1
+
+C:# <------ ZASADY: ----->
+
+
+
+#1. Wklejamy tylko działający kod
+#2. Jeśli ktoś pisze/edytuje kod, nie przeszkadzamy mu
+#3. Jeśli edytujemy czyjś kod, możemy albo komentować albo przekopiować całą funkcję na nowo i zamienić odpowiednie elementy
+#4. Jeśli ktoś skończy pierwszy, wkleja cały działający program, zostawiając odpowiedni komentarz
+#5. Jeśli kopiujemy kod od kogoś, mamy OBOWIĄZEK go zrefaktoryzować!
+#6. Działające funkcje (ewentualnie jeśli tworzymy ja tutaj to przed funkcją), należy opisać krótkim komentarzem (lub dać jednoznaczną nazwę)
+#7. Jeśli ktoś już wkleił w pełni działający kod, a też mamy działający lub mamy pytania, możemy stosownie oddzielić kod jakimś ciągiem zakomentowanych znaków i wkleić pod spodem swój kod lub pytania.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   <------ C:  ----->
+    include <stdio.h>
+    include <stdlib.h>
+    // Assembly function
+    void func_name();
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+	.text
+	.type sum_ascii, @function
+	.globl sum_ascii
+
+#*******************************************************************************************
+# Parametry funkcji       %rdi,       %rsi,       %rdx,             %rcx,             %r8
+# long int sum_ascii(char *str,      int a,      int b,      int charset,      int *count )
+#*******************************************************************************************
+
+sum_ascii:
+    mov %r8, %r12
+	mov %rcx, %r8 #  r8 do charsetu
+	mov %rsi, %rcx # rcx do petli
+	dec %rcx #redukcja pierwszego inc
+	xor %rax, %rax # do sumy
+	xor %rsi, %rsi # do count
+looping:
+    inc %rcx    JobsSign UpLog In
+    jmp check
+two: #dla wielkich dziala
+    movb (%rdi,%rcx,1), %r9b
+    cmp $65, %r9b
+    jb check
+    cmp $90, %r9b
+    jbe add_new
+    jmp check
+three: #dzla malych dziala
+    movb (%rdi,%rcx,1), %r9b
+    cmp $97, %r9b
+    jb check
+    cmp $122, %r9b
+    jbe 
+    jmp check
+four: #najpierw duze potem male
+    movb (%rdi,%rcx,1), %r9b
+    cmp $65, %r9b
+    jb check
+    cmp $90, %r9b
+    jbe add_new
+    jmp three
+check:
+    cmp %rdx, %rcx
+    jnz looping
+    jmp return
+return:
+    movl %esi, (%r12)   #%eax suma
+    ret
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   <------ KOMENTARZE: ----->
+
+183
+
+#ktos wersja podstawowa? pls
+
+184
+
+#Jak wydobywacie rozmiar stringa w assemblerze?
+
+185
+
+#zamiast tego możesz sprawdzać nullterminator tzn czy dany znak jest $0
+
+186
+
+#dziala komus zlicznanie??
+
+187
+
+#ma ktoś program w którym działa chociaż zliczanie? XD
+
+188
+
+#jak zapisać coś w councie?
+
+189
+
+#jak zapiszesz w rejestrze r8 czyli tam gdzie ten argument na początku i potem w c w printf wypiszesz jako wskaznik count to chyba bedzie ok
+
+190
+
+  TRESC:
+
+191
+
+long int sum_ascii(char *str, int a, int b, int charset, int *count );
+
+192
+
+​
+
+193
+
+//---------------------------------------------------------------
+
+194
+
+// funkcja wyznacza sumę kodów ASCII znaków łańcucha str (o ile
+
+195
+
+// znajdujš się na odpowiednich< pozycjach i pasujš do wybranego
+
+196
+
+// zbioru znaków) oraz zwraca liczbę uwzględnionych w sumie znaków
+
+197
+
+//
+
+198
+
+// Parametry:
+
+199
+
+//    str     - łańcuch znaków
+
+200
+
+//    a       - pozycja początkowa sprawdzanych znaków (0<=a<=length(str)-1)
+//    b       - pozycja końcowa sprawdzanych znaków (0<=b i a<=b); jeżeli
+//              b >= length(str), to obliczenia należy wykonać tak,
+//              jakby b było równe length(str)-1
+//    charset - 0 = dowolne znaki
+//              1 = ['0'..'9'] (uwzględniane są tylko cyfry
+//              2 = ['A'..'Z']
+//              3 = ['a'..'z']
+//              4 = ['A'..'Z','a'..'z']
+//    count  - liczba znaków uwzględnionych w trakcie sumowania
+//             (pasujących do charset i na pozycjach z zakresu [a,b]
+//cmp $0
+// W przypadku gdy str ma długosć np. 10, to dla parametrów a=0, b=9
+// i a=0, b=100 funkcja powinna zwracać identyczne wartosci
+//
+// Wersja minimum : prawidłowe działanie dla charset = 0
+
+
+	cmp $0, %r8
+	jnz charset
+	xor %r9, %r9
+	movb (%rdi,%rcx,1), %r9b # każdy movb prznosi 1 bajt ponieważ znach char ma 1 bajt
+
+add_new:
+	add %r9, %rax # dodaje kolejne
+  inc %esi
+	jmp check
+
+charset:
+	cmp $1, %r8
+	jz one
+	cmp $2, %r8
+	jz two
+	cmp $3, %r8
+	jz three
+	cmp $4, %r8
+	jz four
+
+one: # dla liczb działa
+	movb (%rdi,%rcx,1), %r9b
+	cmp $48, %r9b
+	jb check
+	cmp $57, %r9b
+	jbe add_new
+	jmp check
+
+two: #dla wielkich dziala
+	movb (%rdi,%rcx,1), %r9b
+	cmp $65, %r9b
+	jb check
+	cmp $90, %r9b
+	jbe add_new
+	jmp check
+
+three: #dzla malych dziala
+	movb (%rdi,%rcx,1), %r9b
+	cmp $97, %r9b
+	jb check
+	cmp $122, %r9b
+	jbe add_new
+	jmp check
+
+four: #najpierw duze potem male
+	movb (%rdi,%rcx,1), %r9b
+	cmp $65, %r9b
+	jb check
+	cmp $90, %r9b
+	jbe add_new
+	jmp three
+
+check:
+    cmp %rdx, %rcx
+    jnz looping
+	jmp return
+
+return:
+    movl %esi, (%r12) 	#%eax suma
+    ret
+
+    
+    
+    
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#	<------	KOMENTARZE:	----->
+#ktos wersja podstawowa? pls
+#Jak wydobywacie rozmiar stringa w assemblerze?
+#zamiast tego możesz sprawdzać nullterminator tzn czy dany znak jest $0
+#dziala komus zlicznanie??
+#ma ktoś program w którym działa chociaż zliczanie? XD
+#jak zapisać coś w councie?
+#jak zapiszesz w rejestrze r8 czyli tam gdzie ten argument na początku i potem w c w printf wypiszesz jako wskaznik count to chyba bedzie ok
+  TRESC:
+long int sum_ascii(char *str, int a, int b, int charset, int *count );
+
+//---------------------------------------------------------------
+// funkcja wyznacza sumę kodów ASCII znaków łańcucha str (o ile
+// znajdujš się na odpowiednich pozycjach i pasujš do wybranego
+// zbioru znaków) oraz zwraca liczbę uwzględnionych w sumie znaków
+//
+// Parametry:
+//    str     - łańcuch znaków
+//    a       - pozycja początkowa sprawdzanych znaków (0<=a<=length(str)-1)
+//    b       - pozycja końcowa sprawdzanych znaków (0<=b i a<=b); jeżeli
+//              b >= length(str), to obliczenia należy wykonać tak,
+//              jakby b było równe length(str)-1
+//    charset - 0 = dowolne znaki
+//              1 = ['0'..'9'] (uwzględniane są tylko cyfry)
+//              2 = ['A'..'Z']
+//              3 = ['a'..'z']
+//              4 = ['A'..'Z','a'..'z']
+//    count  - liczba znaków uwzględnionych w trakcie sumowania
+//             (pasujących do charset i na pozycjach z zakresu [a,b]
+//cmp $0
+// W przypadku gdy str ma długosć np. 10, to dla parametrów a=0, b=9
+// i a=0, b=100 funkcja powinna zwracać identyczne wartosci
+//
+// Wersja minimum : prawidłowe działanie dla charset = 0
