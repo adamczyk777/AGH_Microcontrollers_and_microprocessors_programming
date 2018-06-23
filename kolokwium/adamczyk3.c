@@ -34,6 +34,14 @@ int main(){
     printf("Argument 2: %s\n", arg2 );
     printf("Operation : %d\n", oper );
     printf("Result    : %s\n", binary_op( res, arg1, arg2, oper ) );
+    printf("Operation : %d\n", 1 );
+    printf("Result    : %s\n", binary_op( res, arg1, arg2, 1 ) );
+    printf("Operation : %d\n", 2 );
+    printf("Result    : %s\n", binary_op( res, arg1, arg2, 2 ) );
+    printf("Operation : %d\n", 3 );
+    printf("Result    : %s\n", binary_op( res, arg1, arg2, 3 ) );
+    printf("Operation : %d\n", 10 );
+    printf("Result    : %s\n", binary_op( res, arg1, arg2, 10 ) );
     return 0;
 }
 
